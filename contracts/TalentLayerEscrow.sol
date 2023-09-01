@@ -109,6 +109,7 @@ contract TalentLayerEscrow is
         uint256 lastInteraction;
         bytes arbitratorExtraData;
         uint256 arbitrationFeeTimeout;
+        bytes paymentReference;
     }
 
     // =========================== Events ==============================
@@ -243,6 +244,15 @@ contract TalentLayerEscrow is
      * @param _evidenceUri The URI of the evidence.
      */
     event EvidenceSubmitted(uint256 indexed _transactionId, uint256 indexed _partyId, string _evidenceUri);
+
+    event TransferWithReferenceAndFee(
+        address tokenAddress,
+        address to,
+        uint256 amount,
+        bytes indexed paymentReference,
+        uint256 feeAmount,
+        address feeAddress
+    );
 
     // =========================== Declarations ==============================
 
@@ -447,6 +457,7 @@ contract TalentLayerEscrow is
     function createTransaction(
         uint256 _serviceId,
         uint256 _proposalId,
+        bytes memory _paymentReference,
         string memory _metaEvidence,
         string memory _originDataUri
     ) external payable whenNotPaused returns (uint256) {
@@ -506,7 +517,8 @@ contract TalentLayerEscrow is
             status: Status.NoDispute,
             arbitrator: originServiceCreationPlatform.arbitrator,
             arbitratorExtraData: originServiceCreationPlatform.arbitratorExtraData,
-            arbitrationFeeTimeout: originServiceCreationPlatform.arbitrationFeeTimeout
+            arbitrationFeeTimeout: originServiceCreationPlatform.arbitrationFeeTimeout,
+            paymentReference: _paymentReference
         });
 
         nextTransactionId.increment();
@@ -516,6 +528,15 @@ contract TalentLayerEscrow is
         if (proposal.rateToken != address(0)) {
             IERC20Upgradeable(proposal.rateToken).safeTransferFrom(sender, address(this), transactionAmount);
         }
+
+        emit TransferWithReferenceAndFee(
+            proposal.rateToken,
+            address(this),
+            transactionAmount,
+            _paymentReference,
+            0,
+            address(0)
+        );
 
         _afterCreateTransaction(service.ownerId, proposal.ownerId, transactionId, _metaEvidence);
 
@@ -540,6 +561,15 @@ contract TalentLayerEscrow is
         transaction.amount -= _amount;
         transaction.releasedAmount += _amount;
 
+        emit TransferWithReferenceAndFee(
+            transaction.token,
+            transaction.receiver,
+            _amount,
+            transaction.paymentReference,
+            0,
+            address(0)
+        );
+
         _release(_transactionId, _amount);
     }
 
@@ -559,6 +589,15 @@ contract TalentLayerEscrow is
 
         Transaction storage transaction = transactions[_transactionId];
         transaction.amount -= _amount;
+
+        emit TransferWithReferenceAndFee(
+            transaction.token,
+            transaction.sender,
+            _amount,
+            transaction.paymentReference,
+            0,
+            address(0)
+        );
 
         _reimburse(_transactionId, _amount);
     }
