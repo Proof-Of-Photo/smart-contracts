@@ -6,6 +6,8 @@ export enum Network {
   FUJI = 43113,
   POLYGON = 137,
   MUMBAI = 80001,
+  ALFAJORES = 44787,
+  MANTLE_TESTNET = 5001,
 }
 
 export type NetworkConfig = {
@@ -113,12 +115,44 @@ const polygon: NetworkConfig = {
   platformList: {},
 }
 
+const celo = {
+  multisigAddressList: {
+    fee: '0x33B424f8aFF0d2a406f1E7386f1ff64aCacC62fe',
+    admin: '0x0CFF3F17b62704A0fc76539dED9223a44CAf4825',
+  },
+  allowedTokenList: {
+    ETH: {
+      address: ethers.constants.AddressZero,
+      minTransactionAmount: '0.001',
+      decimals: 18,
+    },
+  },
+  platformList: {},
+} as any as NetworkConfig
+
+const mantle = {
+  multisigAddressList: {
+    fee: '0x33B424f8aFF0d2a406f1E7386f1ff64aCacC62fe',
+    admin: '0x0CFF3F17b62704A0fc76539dED9223a44CAf4825',
+  },
+  allowedTokenList: {
+    ETH: {
+      address: ethers.constants.AddressZero,
+      minTransactionAmount: '0.001',
+      decimals: 18,
+    },
+  },
+  platformList: {},
+} as NetworkConfig
+
 export const configs: { [networkId in Network]: NetworkConfig } = {
   [Network.LOCAL]: local,
   [Network.AVALANCHE]: avalanche,
   [Network.FUJI]: fuji,
   [Network.POLYGON]: polygon,
   [Network.MUMBAI]: mumbai,
+  [Network.ALFAJORES]: celo,
+  [Network.MANTLE_TESTNET]: mantle,
 }
 
 export const getConfig = (networkId: Network): NetworkConfig => {

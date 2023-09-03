@@ -20,8 +20,18 @@ tests:
 
 deploy-mumbai: 
 	make clean
-	npx hardhat deploy-full --use-test-erc20 --network mumbai --verify
+	npx hardhat deploy-full --use-test-erc20 --network mumbai
 	npx hardhat initial-setup --network mumbai
+
+deploy-celo: 
+	make clean
+	npx hardhat deploy-full --use-test-erc20 --network celo
+	npx hardhat initial-setup --network celo
+
+deploy-mantle: 
+	make clean
+	npx hardhat deploy-full --use-test-erc20 --network mantle
+	npx hardhat initial-setup --network celo
 
 deploy-fuji: 
 	make clean

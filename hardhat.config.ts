@@ -62,6 +62,12 @@ function getChainConfig(chain: Network): NetworkUserConfig {
     case Network.MUMBAI:
       jsonRpcUrl = process.env.MUMBAI_RPC || 'https://matic-mumbai.chainstacklabs.com'
       break
+    case Network.ALFAJORES:
+      jsonRpcUrl = process.env.CELO_TESTNET_RPC || ''
+      break
+    case Network.MANTLE_TESTNET:
+      jsonRpcUrl = process.env.MANTLE_TESTNET_RPC || ''
+      break
     default:
       jsonRpcUrl = 'https://mainnet.infura.io/v3/' + infuraApiKey
   }
@@ -119,6 +125,8 @@ const config: HardhatUserConfig = {
     fuji: getChainConfig(Network.FUJI),
     polygon: getChainConfig(Network.POLYGON),
     mumbai: getChainConfig(Network.MUMBAI),
+    celo: getChainConfig(Network.ALFAJORES),
+    mantle: getChainConfig(Network.MANTLE_TESTNET),
   },
   paths: {
     artifacts: './artifacts',
