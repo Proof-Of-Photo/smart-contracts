@@ -542,7 +542,7 @@ contract TalentLayerEscrowV2 is
                     proposal.rateToken,
                     address(this),
                     transactionAmount,
-                    _paymentReference,
+                    transactions[transactionId].paymentReference,
                     0,
                     address(0)
                 )
