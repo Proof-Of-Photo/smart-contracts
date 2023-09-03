@@ -47,6 +47,7 @@ task(
     for (const [name, { address, minTransactionAmount, decimals }] of Object.entries(
       networkConfig.allowedTokenList,
     )) {
+      console.log('A')
       await run('update-token-address-to-whitelist', {
         address,
         action: 'add',
@@ -55,7 +56,7 @@ task(
       })
     }
     console.log('------------------------')
-
+    console.log('B')
     console.log('------------------------')
     console.log('Set service contract address on TalentLayerID')
     const talentLayerServiceAddress = getDeploymentProperty(

@@ -40,30 +40,39 @@ task('deploy-full', 'Deploy all the contracts on their first version')
         },
       )
 
+      console.log('A')
+
       if (verify) {
         await verifyAddress(talentLayerPlatformID.address)
       }
+      console.log('B')
+
+      await talentLayerPlatformID.deployTransaction.wait(1)
 
       const talentLayerPlatformIDImplementationAddress =
         await // @ts-ignore: upgrades is imported in hardhat.config.ts - HardhatUpgrades
         (upgrades as HardhatUpgrades).erc1967.getImplementationAddress(
           talentLayerPlatformID.address,
         )
+      console.log('C')
       console.log('TalentLayerPlatformID addresses:', {
         proxy: talentLayerPlatformID.address,
         implementation: talentLayerPlatformIDImplementationAddress,
       })
+      console.log('D')
 
       setDeploymentProperty(
         network.name,
         DeploymentProperty.TalentLayerPlatformID,
         talentLayerPlatformID.address,
       )
+      console.log('E')
 
       // Deploy ID contract
       const TalentLayerID = await ethers.getContractFactory('TalentLayerID')
       const talentLayerIDArgs: [string] = [talentLayerPlatformID.address]
       // @ts-ignore: upgrades is imported in hardhat.config.ts - HardhatUpgrades
+      console.log('F')
       const talentLayerID = await (upgrades as HardhatUpgrades).deployProxy(
         TalentLayerID,
         talentLayerIDArgs,
@@ -72,9 +81,15 @@ task('deploy-full', 'Deploy all the contracts on their first version')
           pollingInterval: 20000,
         },
       )
+
+      await talentLayerID.deployTransaction.wait(1)
+
+      console.log('G')
       if (verify) {
         await verifyAddress(talentLayerID.address)
       }
+      console.log('H')
+      console.log(talentLayerID.address)
       const talentLayerIDImplementationAddress =
         await // @ts-ignore: upgrades is imported in hardhat.config.ts - HardhatUpgrades
         (upgrades as HardhatUpgrades).erc1967.getImplementationAddress(talentLayerID.address)
@@ -100,6 +115,8 @@ task('deploy-full', 'Deploy all the contracts on their first version')
           pollingInterval: 20000,
         },
       )
+
+      await talentLayerService.deployTransaction.wait(1)
 
       if (verify) {
         await verifyAddress(talentLayerService.address)
@@ -132,6 +149,9 @@ task('deploy-full', 'Deploy all the contracts on their first version')
           pollingInterval: 20000,
         },
       )
+
+      await talentLayerReview.deployTransaction.wait(1)
+
       if (verify) {
         await verifyAddress(talentLayerReview.address)
       }
@@ -154,6 +174,8 @@ task('deploy-full', 'Deploy all the contracts on their first version')
       const talentLayerArbitrator = await TalentLayerArbitrator.deploy(
         talentLayerPlatformID.address,
       )
+
+      await talentLayerArbitrator.deployTransaction.wait(1)
       if (verify) {
         await verifyAddress(talentLayerArbitrator.address, [talentLayerPlatformID.address])
       }
@@ -184,6 +206,9 @@ task('deploy-full', 'Deploy all the contracts on their first version')
           pollingInterval: 20000,
         },
       )
+
+      await talentLayerEscrow.deployTransaction.wait(1)
+
       if (verify) {
         await verifyAddress(talentLayerEscrow.address)
       }
