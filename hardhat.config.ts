@@ -48,31 +48,40 @@ if (!infuraApiKey) {
 }
 
 function getChainConfig(chain: Network): NetworkUserConfig {
+  let name: string
   let jsonRpcUrl: string
   switch (chain) {
     case Network.AVALANCHE:
+      name = 'avalanche'
       jsonRpcUrl = 'https://avalanche-mainnet.infura.io/v3/' + infuraApiKey
       break
     case Network.FUJI:
+      name = 'fuji'
       jsonRpcUrl = 'https://avalanche-fuji.infura.io/v3/' + infuraApiKey
       break
     case Network.POLYGON:
+      name = 'polygon'
       jsonRpcUrl = 'https://polygon-rpc.com/'
       break
     case Network.MUMBAI:
+      name = 'mumbai'
       jsonRpcUrl = process.env.MUMBAI_RPC || 'https://matic-mumbai.chainstacklabs.com'
       break
     case Network.ALFAJORES:
+      name = 'alfajores'
       jsonRpcUrl = process.env.CELO_TESTNET_RPC || ''
       break
     case Network.MANTLE_TESTNET:
+      name = 'mantle'
       jsonRpcUrl = process.env.MANTLE_TESTNET_RPC || ''
       break
     default:
+      name = 'main'
       jsonRpcUrl = 'https://mainnet.infura.io/v3/' + infuraApiKey
   }
 
   return {
+    name,
     accounts: {
       count: 10,
       mnemonic,
